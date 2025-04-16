@@ -28,6 +28,13 @@ const routes: Routes = [
         (f) => f.OrganizationAdminModule
       ),
   },
+  {
+    path: 'other-user',
+    loadChildren: () =>
+      import('./other-users/other-users.module').then(
+        (f) => f.OtherUsersModule
+      ),
+  },
   // { path: 'main', component: MainComponent },
   // {
   //   path: 'user',
