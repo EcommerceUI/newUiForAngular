@@ -22,6 +22,11 @@ export class CommonService {
     const url = this.baseUrls + '/customdata/getdata';
     return this.http.post<any>(url, req);
   }
+  
+  getByProcedure(req: any): Observable<any> {
+    const url = this.baseUrls + '/customdata/procedure';
+    return this.http.post<any>(url, req);
+  }
 
   getLogin(path: any, req: any) {
     const url = this.baseUrls + path;
@@ -101,4 +106,6 @@ export class CommonService {
       variables: { key },
     });
   }
+  
+
 }

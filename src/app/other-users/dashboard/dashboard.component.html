@@ -1,1 +1,115 @@
-<p>dashboard works!</p>
+<app-navigation></app-navigation>
+
+<!-- <div class="container mt-4 p-4 bg-white rounded shadow">
+    <h2 class="mb-4">Profile Details</h2>
+  
+    <div class="text-center mb-4">
+      <img [src]="profileImageUrl" alt="Profile Image" class="rounded-circle img-thumbnail" width="150" height="150">
+      <div class="mt-2">
+        <input type="file" (change)="onImageUpload($event)" class="form-control w-auto d-inline-block">
+      </div>
+    </div>
+  
+    <form>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Username</label>
+          <input type="text" class="form-control" [value]="profile.username" readonly>
+        </div>
+  
+        <div class="col-md-6">
+          <label class="form-label">Role</label>
+          <input type="text" class="form-control" [value]="profile.role" readonly>
+        </div>
+  
+        <div class="col-md-6">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" [value]="profile.email_id" readonly>
+        </div>
+  
+        <div class="col-md-6">
+          <label class="form-label">Alternate Contact</label>
+          <input type="text" class="form-control" [value]="profile.alternate_contact_number" readonly>
+        </div>
+  
+        <div class="col-md-6">
+          <label class="form-label">Phone Number</label>
+          <input type="text" class="form-control" [value]="profile.phone" readonly>
+        </div>
+  
+        <div class="col-md-6">
+          <label class="form-label">Landline</label>
+          <input type="text" class="form-control" [value]="profile.landline_number" readonly>
+        </div>
+  
+        <div class="col-md-6">
+          <label class="form-label">Company Name</label>
+          <input type="text" class="form-control" [value]="profile.company_name" readonly>
+        </div>
+  
+        <div class="col-md-6">
+          <label class="form-label">Short Name</label>
+          <input type="text" class="form-control" [value]="profile.company_short_name" readonly>
+        </div>
+  
+        <div class="col-md-6">
+          <label class="form-label">Website</label>
+          <input type="text" class="form-control" [value]="profile.website_url" readonly>
+        </div>
+  
+        <div class="col-md-6">
+          <label class="form-label">GST</label>
+          <input type="text" class="form-control" [value]="profile.gst" readonly>
+        </div>
+  
+        <div class="col-md-6">
+          <label class="form-label">PAN Card</label>
+          <input type="text" class="form-control" [value]="profile.business_pan_card" readonly>
+        </div>
+  
+        <div class="col-md-6">
+          <label class="form-label">Registration Number</label>
+          <input type="text" class="form-control" [value]="profile.registration_number" readonly>
+        </div>
+  
+        <div class="col-md-6">
+          <label class="form-label">Date of Establishment</label>
+          <input type="text" class="form-control" [value]="profile.date_of_establishment | date:'yyyy-MM-dd'" readonly>
+        </div>
+  
+        <div class="col-md-6">
+          <label class="form-label">Country of Incorporation</label>
+          <input type="text" class="form-control" [value]="profile.country_of_incorporation" readonly>
+        </div>
+      </div>
+    </form>
+  </div>
+   -->
+
+   <div class="container mt-4 d-flex justify-content-center">
+    <div class="card shadow" style="width: 100%; max-width: 700px;">
+      <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Profile Details</h4>
+        <button class="btn btn-light btn-sm text-primary" (click)="toggleEdit()">
+          {{ isEditMode ? 'Save' : 'Edit' }}
+        </button>
+      </div>
+  
+      <div class="card-body">
+        <div class="text-center mb-4">
+          <img [src]="profileImageUrl" alt="Profile Image" class="rounded-circle img-thumbnail" width="150" height="150">
+          <div class="mt-2">
+            <input *ngIf="isEditMode" type="file" (change)="onImageUpload($event)" class="form-control w-auto d-inline-block">
+          </div>
+        </div>
+  
+        <div class="row g-3">
+          <div class="col-md-6" *ngFor="let field of profileFields">
+            <label class="form-label">{{ field.label }}</label>
+            <input type="text" class="form-control" [value]="field.value" [disabled]="!isEditMode">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

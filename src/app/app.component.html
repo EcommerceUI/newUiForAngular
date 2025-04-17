@@ -11,8 +11,15 @@
   </div>
 </div> -->
 <router-outlet></router-outlet>
- <!-- <ng-template >
+<!-- <ng-template >
   
  
 </ng-template>  -->
 
+
+<div *ngIf="isLoading" class="loader-wrapper">
+  <div class="lds-roller">
+    <div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div>
+  </div>
+</div>

@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from './login.service';
 import { AlertService } from '../services/alert.service';
 import { CommonService } from '../services/common.service';
+import { LoaderService } from '../services/loader.service';
 // import { AuthService } from '../auth.service';
 
 @Component({
@@ -21,7 +22,8 @@ export class LoginComponent implements OnInit {
     private formBuild: FormBuilder,
     private loginService: LoginService,
     private alert: AlertService,
-    private eservice: CommonService
+    private eservice: CommonService,
+    private loaderService: LoaderService
   ) {}
 
   ngOnInit(): void {
@@ -95,77 +97,143 @@ export class LoginComponent implements OnInit {
   //   },
   // };
 
+  // onSubmit() {
+  //   if (this.loginForm.valid) {
+  //     const payload = {
+  //       usernameOrEmailOrPhone: this.loginForm.value.userName,
+  //       password: this.loginForm.value.password,
+  //     };
+  //     this.eservice.getLogin('/auth/login', payload).subscribe((resp: any) => {
+  //       console.log(resp);
+
+  //       if (
+  //         resp?.statusCode === 0 &&
+  //         resp?.responseContent?.role === 'GATEPASS_ADMIN'
+  //       ) {
+  //         localStorage.setItem('role', resp?.responseContent?.role);
+  //         localStorage.setItem('userId', resp?.responseContent?.userId);
+  //         localStorage.setItem('phone', resp?.responseContent?.phone);
+  //         localStorage.setItem(
+  //           'accessToken',
+  //           resp?.responseContent?.accessToken
+  //         );
+  //         localStorage.setItem('userName', resp?.responseContent?.userName);
+  //         localStorage.setItem('email', resp?.responseContent?.email);
+  //         localStorage.setItem(
+  //           'refreshToken',
+  //           resp.responseContent.refreshToken
+  //         );
+
+  //         this.route.navigate(['gatapass-admin', 'dashboard']);
+  //         this.alert.showCustomPopup('success', 'Login Successful');
+  //       } else if (
+  //         resp?.statusCode === 0 &&
+  //         resp?.responseContent?.role === 'ORGANIZATION_ADMIN'
+  //       ) {
+  //         localStorage.setItem('role', resp?.responseContent?.role);
+  //         localStorage.setItem('userId', resp?.responseContent?.userId);
+  //         localStorage.setItem('phone', resp?.responseContent?.phone);
+  //         localStorage.setItem(
+  //           'accessToken',
+  //           resp?.responseContent?.accessToken
+  //         );
+  //         localStorage.setItem('userName', resp?.responseContent?.userName);
+  //         localStorage.setItem('email', resp?.responseContent?.email);
+  //         localStorage.setItem(
+  //           'refreshToken',
+  //           resp.responseContent.refreshToken
+  //         );
+  //         localStorage.setItem('orgId', resp?.responseContent?.orgId);
+  //         this.route.navigate(['organization-admin', 'dashboard']);
+  //         this.alert.showCustomPopup('success', 'Login Successful');
+  //       } else {
+  //         localStorage.setItem('role', resp?.responseContent?.role);
+  //         localStorage.setItem('userId', resp?.responseContent?.userId);
+
+  //         localStorage.setItem('phone', resp?.responseContent?.phone);
+  //         localStorage.setItem(
+  //           'accessToken',
+  //           resp?.responseContent?.accessToken
+  //         );
+  //         localStorage.setItem('userName', resp?.responseContent?.userName);
+  //         localStorage.setItem('email', resp?.responseContent?.email);
+  //         localStorage.setItem(
+  //           'refreshToken',
+  //           resp.responseContent.refreshToken
+  //         );
+  //         localStorage.setItem('orgId', resp?.responseContent?.orgId);
+  //         this.route.navigate(['other-user', 'dashboard']);
+  //         this.alert.showCustomPopup('success', 'Login Successful');
+  //       }
+  //     });
+  //   } else {
+  //     if (this.loginForm.get('userName')?.hasError('required')) {
+  //       this.alert.showCustomPopup('error', 'Plese enter UserName');
+  //     } else {
+  //       this.alert.showCustomPopup('error', 'Plese enter Password');
+  //     }
+  //   }
+  // }
+
+
+
   onSubmit() {
     if (this.loginForm.valid) {
       const payload = {
         usernameOrEmailOrPhone: this.loginForm.value.userName,
         password: this.loginForm.value.password,
       };
-      this.eservice.getLogin('/auth/login', payload).subscribe((resp: any) => {
-        console.log(resp);
-
-        if (
-          resp?.statusCode === 0 &&
-          resp?.responseContent?.role === 'GATEPASS_ADMIN'
-        ) {
-          localStorage.setItem('role', resp?.responseContent?.role);
-          localStorage.setItem('phone', resp?.responseContent?.phone);
-          localStorage.setItem(
-            'accessToken',
-            resp?.responseContent?.accessToken
-          );
-          localStorage.setItem('userName', resp?.responseContent?.userName);
-          localStorage.setItem('email', resp?.responseContent?.email);
-          localStorage.setItem(
-            'refreshToken',
-            resp.responseContent.refreshToken
-          );
-
-          this.route.navigate(['gatapass-admin', 'dashboard']);
-          this.alert.showCustomPopup('success', 'Login Successful');
-        } else if (
-          resp?.statusCode === 0 &&
-          resp?.responseContent?.role === 'ORGANIZATION_ADMIN'
-        ) {
-          localStorage.setItem('role', resp?.responseContent?.role);
-          localStorage.setItem('phone', resp?.responseContent?.phone);
-          localStorage.setItem(
-            'accessToken',
-            resp?.responseContent?.accessToken
-          );
-          localStorage.setItem('userName', resp?.responseContent?.userName);
-          localStorage.setItem('email', resp?.responseContent?.email);
-          localStorage.setItem(
-            'refreshToken',
-            resp.responseContent.refreshToken
-          );
-          localStorage.setItem('orgId', resp?.responseContent?.orgId);
-          this.route.navigate(['organization-admin', 'dashboard']);
-          this.alert.showCustomPopup('success', 'Login Successful');
-        } else {
-          localStorage.setItem('role', resp?.responseContent?.role);
-          localStorage.setItem('phone', resp?.responseContent?.phone);
-          localStorage.setItem(
-            'accessToken',
-            resp?.responseContent?.accessToken
-          );
-          localStorage.setItem('userName', resp?.responseContent?.userName);
-          localStorage.setItem('email', resp?.responseContent?.email);
-          localStorage.setItem(
-            'refreshToken',
-            resp.responseContent.refreshToken
-          );
-          localStorage.setItem('orgId', resp?.responseContent?.orgId);
-          this.route.navigate(['other-user', 'dashboard']);
-          this.alert.showCustomPopup('success', 'Login Successful');
+  
+      // 🔁 Show loader before request
+      this.loaderService.true();
+  
+      this.eservice.getLogin('/auth/login', payload).subscribe({
+        next: (resp: any) => {
+          console.log(resp);
+  
+          // Common localStorage logic based on role
+          const content = resp?.responseContent;
+          if (resp?.statusCode === 0) {
+            localStorage.setItem('role', content?.role);
+            localStorage.setItem('userId', content?.userId);
+            localStorage.setItem('phone', content?.phone);
+            localStorage.setItem('accessToken', content?.accessToken);
+            localStorage.setItem('userName', content?.userName);
+            localStorage.setItem('email', content?.email);
+            localStorage.setItem('refreshToken', content?.refreshToken);
+  
+            if (content?.role === 'GATEPASS_ADMIN') {
+              this.route.navigate(['gatapass-admin', 'dashboard']);
+            } else if (content?.role === 'ORGANIZATION_ADMIN') {
+              localStorage.setItem('orgId', content?.orgId);
+              this.route.navigate(['organization-admin', 'dashboard']);
+            } else {
+              localStorage.setItem('orgId', content?.orgId);
+              this.route.navigate(['other-user', 'dashboard']);
+            }
+  
+            this.alert.showCustomPopup('success', 'Login Successful');
+          } else {
+            this.alert.showCustomPopup('error', 'Invalid Credentials');
+          }
+  
+          this.loaderService.false();
+        },
+        error: (err) => {
+          console.error(err);
+          this.alert.showCustomPopup('error', 'Something went wrong!');
+          
+          this.loaderService.false();
         }
       });
+  
     } else {
       if (this.loginForm.get('userName')?.hasError('required')) {
-        this.alert.showCustomPopup('error', 'Plese enter UserName');
+        this.alert.showCustomPopup('error', 'Please enter UserName');
       } else {
-        this.alert.showCustomPopup('error', 'Plese enter Password');
+        this.alert.showCustomPopup('error', 'Please enter Password');
       }
     }
   }
+  
 }
